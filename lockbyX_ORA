@@ -1,0 +1,33 @@
+--> Services <--
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+--> Player Varaibles <--
+local player = Players.LocalPlayer
+local playerCharacter = player.Character
+local playerHumanoidRootPart = playerCharacter:WaitForChild("HumanoidRootPart")
+
+--> Anti-Lock Settings <--
+getgenv().AntiLockSettings = {
+    isEnabled = true,
+    X = 0,
+    Y = 99999,
+    Z = 99999
+}
+
+--> Function To Handle When Player Respawns <--
+player.CharacterAdded:Connect(function(NewCharacter)
+    playerCharacter = player.NewCharacter
+    playerHumanoidRootPart = playerCharacter:WaitForChild("HumanoidRootPart")
+end)
+
+--> Anti-Lock Function
+if getgenv().Settings.isEnabled then
+    RunService.Heartbeat:Connect(function()   
+        local playerHumanoidRootPartVelocity = playerHumanoidRootPart.Velocity
+           
+        playerHumanoidRootPart.Velocity = Vector3.new(math.random(-getgenv().AntiLockSettings.X, getgenv().AntiLockSettings.X), math.random(-getgenv().AntiLockSettings.Y, getgenv().AntiLockSettings.Y), math.random(-getgenv().AntiLockSettings.Z, getgenv().AntiLockSettings.Z))               
+        RunService.RenderStepped:Wait()   
+        playerHumanoidRootPart.Velocity = playerHumanoidRootPartVelocity
+    end)
+end
